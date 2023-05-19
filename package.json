@@ -1,0 +1,25 @@
+{
+  "name": "rn-flex-image",
+  "version": "0.0.1",
+  "description": "React Native component to display remote image without requirement to specify width and height but just follows the flexbox layout rule",
+  "main": "index.js",
+  "engines": {
+    "node": ">=8.3.0"
+  },
+  "peerDependencies": {
+    "react-native": "*",
+    "rn-style-props": "*"
+  },
+  "scripts": {
+    "install": "node scripts/install.js",
+    "uninstall": "node scripts/uninstall.js"
+  },
+  "author": "AT Mulyana <atmulyana@yahoo.com>",
+  "license": "MIT",
+  "repository": "https://github.com/atmulyana/rn-flex-image",
+  "keywords": [
+    "react-native",
+    "flex",
+    "image"
+  ]
+}
