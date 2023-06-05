@@ -1,0 +1,10 @@
+/**
+ * https://github.com/atmulyana/rn-flex-image
+ * @format
+ * @flow strict-local
+ */
+import {Image} from 'react-native';
+
+declare export const DefaultImage: Number;
+declare export const NoImage: Number;
+declare export default typeof Image;

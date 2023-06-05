@@ -1,8 +1,21 @@
 {
   "name": "rn-flex-image",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "author": "AT Mulyana <atmulyana@yahoo.com>",
+  "license": "MIT",
+  "repository": "https://github.com/atmulyana/rn-flex-image",
   "description": "React Native component to display remote image without requirement to specify width and height but just follows the flexbox layout rule",
+  "keywords": [
+    "react-native",
+    "flex",
+    "image"
+  ],
   "main": "index.js",
+  "scripts": {
+    "install": "node scripts/install.js",
+    "test": "jest",
+    "uninstall": "node scripts/uninstall.js"
+  },
   "engines": {
     "node": ">=8.3.0"
   },
@@ -10,16 +23,17 @@
     "react-native": "*",
     "rn-style-props": "*"
   },
-  "scripts": {
-    "install": "node scripts/install.js",
-    "uninstall": "node scripts/uninstall.js"
+  "devDependencies": {
+    "@babel/core": "^7.22.1",
+    "babel-jest": "^29.5.0",
+    "jest": "^29.5.0",
+    "metro-react-native-babel-preset": "^0.76.5",
+    "react-test-renderer": "*"
   },
-  "author": "AT Mulyana <atmulyana@yahoo.com>",
-  "license": "MIT",
-  "repository": "https://github.com/atmulyana/rn-flex-image",
-  "keywords": [
-    "react-native",
-    "flex",
-    "image"
-  ]
+  "jest": {
+    "preset": "react-native",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?|rn-style-props)/)"
+    ]
+  }
 }

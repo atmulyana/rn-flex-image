@@ -48,7 +48,6 @@ const calculateLength = (actualCalculatedLength, actualBaseLength, baseLength) =
 
 
 class ImageWraper extends React.PureComponent {
-    _baseSide = null;
     _imageSize = {width: 0, height: 0};
     _lastImageSize = {width: -1, height: -1};
 
@@ -57,44 +56,50 @@ class ImageWraper extends React.PureComponent {
         this.state = imageStyle(props);
     }
 
-    _setSize(size) {
-        const style = imageStyle(this.props);
-        if (this._baseSide != 'height') {
-            style.height = size.height;
-            style.flex = 0;
-        }
-        if (this._baseSide != 'width') {
-            style.width = size.width;
-            style.alignSelf = 'center';
-        }
-        this.setState(style);
-    }
-
     updateSize() {
-        const {width, height} = {...this._imageSize};
+        const {width, height} = this._imageSize;
         if (width == this._lastImageSize.width && height == this._lastImageSize.height) return;
         this._lastImageSize = this._imageSize;
         const {source} = this.props;
         const newSize = {width, height};
-        let isEmpty = false;
+
+        let baseSide = null;
+        {
+            const {width, height} = this.state;
+            if (width !== undefined && height === undefined) baseSide = 'height';
+            else if (width === undefined && height !== undefined) baseSide = 'width';
+        }
+
+        const setSize = size => {
+            const style = imageStyle(this.props);
+            if (baseSide != 'height') {
+                style.height = size.height;
+                style.flex = 0;
+            }
+            if (baseSide != 'width') {
+                style.width = size.width;
+                style.alignSelf = 'center';
+            }
+            this.setState(style);
+        }
         
-        const updateDim = actual => {
+        const scaleSize = actual => {
             let base = 'width', calculated = 'height';
-            if (this._baseSide == 'height') [base, calculated] = [calculated, base];
+            if (baseSide == 'height') [base, calculated] = [calculated, base];
             newSize[calculated] = calculateLength(actual[calculated], actual[base], newSize[base]);
-            this._setSize(newSize);
+            setSize(newSize);
         };
 
         const getActualSizeSuccess = (width, height) => {
             const actualSize = {width, height};
-            if (isEmpty) this._setSize(actualSize);
-            else updateDim(actualSize);
+            if (baseSide) scaleSize(actualSize);
+            else setSize(actualSize);
         };
         const getActualSizeError = () => {
             //can't get the actual dimension of image, consider the space height is the same as width
             if (newSize.width < 1) newSize.width = newSize.height;
             else newSize.height = newSize.width;
-            this._setSize(newSize);
+            setSize(newSize);
         };
         const setNewSize = () => {
             if (typeof(source) == 'object') {
@@ -112,7 +117,7 @@ class ImageWraper extends React.PureComponent {
         };
 
         if (width > 0 && height > 0) {
-            if (this._baseSide) { //The side that should be 0 has length because of the setting in the previous rendering.
+            if (baseSide) { //The side that should be 0 has length because of the setting in the previous rendering.
                 setNewSize();
             }
             else {
@@ -121,17 +126,16 @@ class ImageWraper extends React.PureComponent {
         }
         else if (width > 0 || height > 0) { //For remote image in the first rendering, usually one of width or height of space hasn't been known (zero)
                                             //if the `style` doesn't yield complete measure
-            this._baseSide = width > 0 ? 'width' : 'height';
+            baseSide = width > 0 ? 'width' : 'height';
             setNewSize();
         }
         else {
-            isEmpty = true; //if all sides are 0 then try to set to the actual size
+            baseSide = null; //if all sides are 0 then try to set to the actual size
             setNewSize();
         }
     }
 
     refresh() {
-        this._baseSide = null;
         this._lastImageSize = {width: -1, height: -1};
         this.setState(imageStyle(this.props));
     }
@@ -168,7 +172,7 @@ export default class extends React.PureComponent {
             srcSet,
             style,
             width;
-        ({defaultSource, source, src, srcSet, style, ...props} = this.props);
+        ({defaultSource, onLayout, source, src, srcSet, style, ...props} = this.props);
 
         if (src) {
             source = {uri: src};
@@ -204,7 +208,7 @@ export default class extends React.PureComponent {
         style = extractImageStyle(style);
         
         return <View style={[style.view /** width/height may include border and/or padding */, styles.imageBox]}
-            onLayout={() => {
+            onLayout={ev => {
                 /**
                  * On Android, We call call `image.updateSize` here, not in `Image` `onLayout` event itself, because if `Image` initially doesn't
                  * have dimension (width and height are zero), it doesn't trigger `onLayout` event. The event is triggered then when its size
@@ -212,6 +216,7 @@ export default class extends React.PureComponent {
                  * order is not like that. So, for iOS, calling `image.updateSize` is in `Image` `onLayout` event itself.
                  */
                 updateSizeContainer(image);
+                typeof(onLayout) == 'function' && onLayout(ev);
             }}>
             <ImageWraper ref={img => image = img} {...props}
                 style={[styles.imageDefault, style.image]}
