@@ -4,6 +4,6 @@
  */
 import {Image} from 'react-native';
 
-declare export const DefaultImage: Number;
-declare export const NoImage: Number;
-declare export default class extends Image {};
+export const DefaultImage: number;
+export const NoImage: number;
+export default class extends Image {}
