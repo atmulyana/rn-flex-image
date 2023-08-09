@@ -1,5 +1,4 @@
 /**
- * rn-flex-image
  * https://github.com/atmulyana/rn-flex-image
  *
  * The purpose of using this component, we don't need to set width and height of an Image, especially for remote image, but just follows the layout rule
@@ -23,6 +22,9 @@ catch {
 }
 
 const styles = StyleSheet.create({
+    imageBoxDefault: {
+        justifyContent: 'center',
+    },
     imageBox: {
         overflow: 'hidden',
     },
@@ -207,7 +209,11 @@ export default class extends React.PureComponent {
 
         style = extractImageStyle(style);
         
-        return <View style={[style.view /** width/height may include border and/or padding */, styles.imageBox]}
+        return <View style={[
+                styles.imageBoxDefault,
+                style.view /** width/height may include border and/or padding */,
+                styles.imageBox
+            ]}
             onLayout={ev => {
                 /**
                  * On Android, We call call `image.updateSize` here, not in `Image` `onLayout` event itself, because if `Image` initially doesn't

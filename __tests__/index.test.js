@@ -59,6 +59,7 @@ test('render non default', () => {
     ).toStrictEqual({
         borderWidth: 2,
         flex: 1,
+        justifyContent: "center",
         overflow: 'hidden',
         padding: 3,
     });

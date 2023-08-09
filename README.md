@@ -5,13 +5,6 @@ from `Image` component is when displaying a remote image, this component still d
 both of the width and the height of the image. In this case, `Image` component will display no image. For further information, see the
 **Example** section.
 
-## **How to install this package**
-
-Because this is a React Native component, you must install it on a React Native project. Beside that, you must also install `rn-style-props`
-package. You may use the console command below:
-
-    npm i rn-style-props rn-flex-image
-
 ## **Example**
 
 ```javascript

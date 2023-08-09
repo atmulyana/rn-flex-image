@@ -1,6 +1,6 @@
 {
   "name": "rn-flex-image",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "AT Mulyana <atmulyana@yahoo.com>",
   "license": "MIT",
   "repository": "https://github.com/atmulyana/rn-flex-image",
@@ -19,9 +19,11 @@
   "engines": {
     "node": ">=8.3.0"
   },
-  "peerDependencies": {
-    "react-native": "*",
+  "dependencies": {
     "rn-style-props": "*"
+  },
+  "peerDependencies": {
+    "react-native": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.22.1",
