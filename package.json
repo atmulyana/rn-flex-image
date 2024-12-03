@@ -12,7 +12,6 @@
   ],
   "main": "index.js",
   "scripts": {
-    "flow": "flow",
     "install": "node scripts/install.js",
     "test": "jest",
     "uninstall": "node scripts/uninstall.js"
