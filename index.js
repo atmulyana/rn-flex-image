@@ -9,8 +9,8 @@ import React from 'react';
 import {Image, Platform, StyleSheet, View} from 'react-native';
 import {extractImageStyle} from 'rn-style-props';
 
-export let DefaultImage = require('./images/default.png');
-export let NoImage = require('./images/no-image.png');
+let DefaultImage = require('./images/default.png');
+let NoImage = require('./images/no-image.png');
 try {
     const vars = require('../../rn-flex-image.config');
     if (typeof(vars) == 'object' && vars) {
@@ -20,6 +20,7 @@ try {
 }
 catch {
 }
+export {DefaultImage, NoImage};
 
 const styles = StyleSheet.create({
     imageBoxDefault: {
@@ -39,9 +40,12 @@ const styles = StyleSheet.create({
 });
 
 /** See the comment for `onLayout` event! */
-let updateSize = image => image && image.updateSize(),
-    updateSizeContainer = () => {};
-if (Platform.OS == 'android') [updateSize, updateSizeContainer] = [updateSizeContainer, updateSize];
+let updateSizeOnContainer = () => {};
+if (Platform.OS == 'android') {
+    updateSizeOnContainer = (image, layout) => {
+        if (image && layout.height == 0 && layout.width == 0) image.updateSize();
+    };
+}
 
 const imageStyle = props => ({...styles.image, flex: props.flex ? 1 : 0});
 
@@ -64,7 +68,7 @@ class ImageWraper extends React.PureComponent {
         this._lastImageSize = this._imageSize;
         const {source} = this.props;
         const newSize = {width, height};
-
+        
         let baseSide = null;
         {
             const {width, height} = this.state;
@@ -148,7 +152,7 @@ class ImageWraper extends React.PureComponent {
         return <Image {...props} style={style}
             onLayout={({nativeEvent: {layout}}) => {
                 this._imageSize = layout;
-                updateSize(this);
+                this.updateSize();
             }}
         />;
     }
@@ -216,12 +220,10 @@ export default class extends React.PureComponent {
             ]}
             onLayout={ev => {
                 /**
-                 * On Android, We call call `image.updateSize` here, not in `Image` `onLayout` event itself, because if `Image` initially doesn't
-                 * have dimension (width and height are zero), it doesn't trigger `onLayout` event. The event is triggered then when its size
-                 * changes. The order of event is `Image` `onLayout` event happens before its container's `onLayout` event. On iOS, sometimes the
-                 * order is not like that. So, for iOS, calling `image.updateSize` is in `Image` `onLayout` event itself.
+                 * On Android with RN < 0.73, if the container initially doesn't have dimension (width and height are zero),
+                 * it doesn't trigger `onLayout` event on `Image`. So, `image.updateSize` must be invoked here. 
                  */
-                updateSizeContainer(image);
+                updateSizeOnContainer(image, ev.nativeEvent.layout);
                 typeof(onLayout) == 'function' && onLayout(ev);
             }}>
             <ImageWraper ref={img => image = img} {...props}

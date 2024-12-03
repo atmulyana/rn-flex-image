@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
 ```
 
 In the example above, if you remove `alignSelf` and/or `flex` prop from `styles.image` then `Image` component won't dsplay an image whereas
-`FlexImage` will still does. Beside that, if you change the `source` to a local image then `Image` component will dispaly the image with
-original size whereas the `FlexImage` will stretch the image. Another difference, `border` and `padding` look having more effect when using
+`FlexImage` will still do. Beside that, if you change the `source` to a local image then `Image` component will dispaly the image with
+original size whereas `FlexImage` will stretch the image. Another difference, `border` and `padding` look having more effect when using
 `FlexImage`.
 
 ## **Config**
